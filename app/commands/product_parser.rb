@@ -2,7 +2,7 @@
 
 # ControlChecklistExcelExport
 #
-class Parser
+class ProductParser
   prepend SimpleCommand
 
   def initialize(initial_url)
@@ -11,12 +11,33 @@ class Parser
   end
 
   def call
-    parse
+    parse_products
   end
 
   private
 
   attr_reader :initial_url
+
+  def parse_products
+    require 'open-uri'
+    Product.all.each do |product|
+      if product.description.nil?
+        update_product_data(product)
+      end
+    end
+  end
+
+  def update_product_data(product)
+    response_data=get_url("https://ssnab.ru#{product.link}")
+    debugger
+    product.update(description: response_data.css("pre.catalog-detail-info")[0].text)
+    begin
+    IO.copy_stream(URI.open("https://ssnab.ru#{response_data.css('a.fancybox')[0].attributes['href'].value}"), "./public/products/#{product.code}.png")
+    rescue
+      return
+    end
+    
+  end
 
   def parse
     debugger

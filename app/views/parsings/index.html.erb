@@ -1,0 +1,27 @@
+
+
+
+
+<h1>Products</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Category</th>
+    <th>title</th>
+    <th>link</th>
+    <th>description</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <%@products.each do|product| %>
+    <tr>
+      <td><%= product.main_category %></td>
+      <td><%= product.title %></td>
+      <td><%= product.link %></td>
+      <td><%= product.description %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
